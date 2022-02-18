@@ -25,7 +25,7 @@ let authToken = 'default';
         return 'not exists';
     };
 
-    export async function createTestExecution (environment, date) {
+    async function createTestExecution (environment, date) {
         var executionId = await getExistingExecutions(`Test Execution for ${environment} ${date}`);
 
         if (executionId == 'not exists') {
@@ -38,41 +38,41 @@ let authToken = 'default';
         return executionId;
     };
 
-    export async function addTestToTestExecution (testIssueId, executionIssueId) {
+    async function addTestToTestExecution (testIssueId, executionIssueId) {
         var addTestsToTestExecutionQueryString = `mutation {\n    addTestsToTestExecution(\n        issueId: "${executionIssueId}",\n        testIssueIds: ["${testIssueId}"]\n    ) {\n        addedTests\n        warning\n    }\n}`;
 
         await sendRequestToXrayGraphQL(addTestsToTestExecutionQueryString);
     }
 
-    export async function getTestRun (testIssueID, executionIssueId) {
+    async function getTestRun (testIssueID, executionIssueId) {
         var getTestRunQueryString = `{\n    getTestRun( testIssueId: "${testIssueID}", testExecIssueId: "${executionIssueId}") {\n        id\n        status {\n            name\n            color\n            description\n        }\n        gherkin\n        examples {\n            id\n            status {\n                name\n                color\n                description\n            }\n        }\n    }\n}`;
         var getTestRunResult = await sendRequestToXrayGraphQL(getTestRunQueryString);
 
         return getTestRunResult;
     }
 
-    export async function updateTestRunStatus (testRunId, testRunStatus) {
+    async function updateTestRunStatus (testRunId, testRunStatus) {
         var updateTestRunStatusQueryString = `mutation {\n    updateTestRunStatus( id: "${testRunId}", status: "${testRunStatus}")\n}`;
         var updateTestRunStatusResult = await sendRequestToXrayGraphQL(updateTestRunStatusQueryString);
 
         return updateTestRunStatusResult;
     }
 
-    export async function addCommentToTestRun (testRunId, testRunErrorMessage) {
+    async function addCommentToTestRun (testRunId, testRunErrorMessage) {
         var addCommentQueryString = `mutation {\n    updateTestRunComment( id: "${testRunId}", comment: "${testRunErrorMessage}")\n}`;
         var addCommentResult = await sendRequestToXrayGraphQL(addCommentQueryString);
 
         return addCommentResult;
     }
 
-    export async function addEvidenceToTestRun (testRunId, evidenceFile, i) {
+    async function addEvidenceToTestRun (testRunId, evidenceFile, i) {
         var addEvidenceQueryString = `mutation {\n    addEvidenceToTestRun(\n        id: "${testRunId}",\n        evidence: [\n            {\n                filename: "evidence${i}.png"\n                mimeType: "text/plain"\n                data: "${evidenceFile}"\n            }\n        ]\n    ) {\n        addedEvidence\n        warnings\n    }\n}`;
         var evidenceResult = await sendRequestToXrayGraphQL(addEvidenceQueryString);
 
         return evidenceResult;
     }
 
-    export async function getIssueId (ticketId) {
+    async function getIssueId (ticketId) {
         return new Promise((resolve, reject) => {
             Request.get({
                 headers: { 'content-type': 'application/json', Authorization: `${process.env.JIRA_AUTH}` },
@@ -86,7 +86,7 @@ let authToken = 'default';
         });
     }
 
-    export async function getAuthTokenForXray () {   
+     async function getAuthTokenForXray () {   
         return new Promise((resolve, reject) => {
             Request.post({
                 headers: { 'Content-Type': 'application/json' },
@@ -101,9 +101,9 @@ let authToken = 'default';
         });    
     }
 
-    export async function sendRequestToXrayGraphQL (queryString) {
+    async function sendRequestToXrayGraphQL (queryString) {
         if (authToken == 'default') 
-            authToken = await this.getAuthTokenForXray();
+            authToken = await getAuthTokenForXray();
     
         return new Promise((resolve, reject) => {
             Request.post({
@@ -118,5 +118,11 @@ let authToken = 'default';
             });
         });
     }
-
+exports.getIssueId = getIssueId;
+exports.addEvidenceToTestRun = addEvidenceToTestRun;
+exports.addCommentToTestRun = addCommentToTestRun;
+exports.updateTestRunStatus = updateTestRunStatus;
+exports.getTestRun = getTestRun;
+exports.addTestToTestExecution = addTestToTestExecution;
+exports.createTestExecution = createTestExecution;
 
