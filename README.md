@@ -15,7 +15,7 @@ test('**XRAY-50** Test Fuctionality name', async () => {
 
 });
 
-`Jira Test Id should be added to the first name for the Test case -- **XRAY-50**` 
+`Jira Test Id should be added to the name of the Test case -- **XRAY-50**` 
 
 ## Install
 
