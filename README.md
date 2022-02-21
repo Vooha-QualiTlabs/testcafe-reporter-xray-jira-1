@@ -10,12 +10,14 @@ npm install testcafe-reporter-xray-jira
 ```
 ## Define env variables
 
+```
 JIRA_BASE_URL= https://xxxx.atlassian.net/ 
 JIRA_AUTH = Basic xxxxxxxxxxxxx
 JIRA_PROJECT_KEY= YOUR_JIRA_PROJECT_KEY
 XRAY_CLIENT_ID = YOU_CAN_GET_IT_FROM_XRAY_API_KEYS
 XRAY_CLIENT_SECRET = YOU_CAN_GET_IT_FROM_XRAY_API_KEYS
 
+```
 
 ## Usage
 
