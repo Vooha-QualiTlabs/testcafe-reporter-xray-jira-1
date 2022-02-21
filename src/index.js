@@ -1,3 +1,4 @@
+
 var xray = require( '../test/utils/xray');
 
 let executionId;
@@ -5,6 +6,8 @@ let executionId;
 module.exports = function () {  
                
     return {
+        noColors: true,
+
         async reportTaskStart (startTime, userAgents, testCount) {
             this.startTime = startTime;
             this.testCount = testCount;
@@ -21,8 +24,9 @@ module.exports = function () {
                 osType = 'Windows';
               
             const env = `${osType} ${browser}`;
+            const day = `${date[1]}-${date[2]}-${date[3]}`;
       
-            executionId = await xray.createTestExecution(env, date);      
+            executionId = await xray.createTestExecution(osType, env, day);      
         },
     
         async reportFixtureStart (name, path, meta) {
@@ -66,22 +70,26 @@ module.exports = function () {
               
             // Get Error message if failed
             var testRunError = '';
+            var errorsInfo =  testRunInfo.errs;
 
             if (testRunStatus == 'FAILED') {                      
-                testRunInfo.errs.forEach(function (error) {          
-                    testRunError += this.formatError(error);
-                });          
-                console.log('testRunError: ', testRunError);        
+                errorsInfo.forEach(function (error) {          
+                    testRunError += error.errMsg;
+                });                
             }
     
-            // Add comment if the Test is failed
+            // Add artifacts for Failures
             if (testRunStatus == 'FAILED') {
+                // Add Error message as comments to Test Run
                 await xray.addCommentToTestRun(testRunId, testRunError);
-                
+                               
                 // Add Evidence Screenshots to Test Run
-                for (let i = 1; i <= testRunInfo.screenshots.length; i++) 
-                    await xray.addEvidenceToTestRun(testRunId, testRunInfo.screenshots[i - 1].screenshotPath, i);
-                 
+                for (let i = 1; i <= testRunInfo.screenshots.length; i++) {
+                    var imagePaths = testRunInfo.screenshots[i - 1].screenshotPath;
+                    var imageData = await xray.base64_encode(imagePaths);
+
+                    await xray.addEvidenceToTestRun(testRunId, imageData, i);
+                }
             }  
             
         },
