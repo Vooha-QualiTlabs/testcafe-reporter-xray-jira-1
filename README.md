@@ -3,6 +3,18 @@
 
 This is the **xray-jira** reporter plugin for [TestCafe](http://devexpress.github.io/testcafe).
 
+## How it Works?
+
+This reporter creates Test Execution for the current Execution with `Test Execution for Windows Chrome Feb-dd-2022` format. Adds the Tests to the Test Run and update the Results to the Test Runs. It adds Screenshots as Evidence and Errors as comment to the Failed Tests.
+
+We have to define the test as below:
+
+test('**XRAY-50** Test Fuctionality name', async () => {
+
+// Do Some thing
+
+});
+
 ## Install
 
 ```
