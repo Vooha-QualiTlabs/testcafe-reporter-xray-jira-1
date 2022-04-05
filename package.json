@@ -39,7 +39,7 @@
     "read-file-relative": "^1.2.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.3.4",
+    "@babel/runtime": "^7.17.7",
     "dotenv": "^16.0.0",
     "testcafe": "^1.18.3"
   }
