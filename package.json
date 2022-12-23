@@ -41,6 +41,6 @@
   "dependencies": {
     "@babel/runtime": "^7.3.4",
     "dotenv": "^16.0.0",
-    "testcafe": "^1.18.3"
+    "testcafe": "^2.0.1"
   }
 }
